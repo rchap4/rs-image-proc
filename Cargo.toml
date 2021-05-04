@@ -1,0 +1,11 @@
+[package]
+name = "rs-image-proc"
+version = "0.1.0"
+authors = ["RChapman <rchap4@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+photon-rs = { git = "https://github.com/silvia-odwyer/photon" }
+structopt = "0.3.21"

@@ -1,0 +1,6 @@
+*.jpg
+*.png
+*.tif
+target/
+Cargo.lock
+.DS_Store
