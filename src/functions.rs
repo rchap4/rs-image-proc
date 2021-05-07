@@ -15,18 +15,18 @@ pub mod functions {
             let g_val = image_pixels[i + 1];
             let b_val = image_pixels[i + 2];
 
-            if r_val >= 0 + brightness {
+            if r_val >= brightness {
                 image_pixels[i] -= brightness;
             } else {
                 image_pixels[i] = 0;
             }
-            if g_val >= 0 + brightness {
+            if g_val >= brightness {
                 image_pixels[i + 1] -= brightness;
             } else {
                 image_pixels[i + 1] = 0
             }
 
-            if b_val >= 0 + brightness {
+            if b_val >= brightness {
                 image_pixels[i + 2] -= brightness;
             } else {
                 image_pixels[i + 2] = 0
