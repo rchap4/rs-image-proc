@@ -87,14 +87,14 @@ fn brighten_contrast(
 //     })
 // }
 
-fn resize_image(image: &mut PhotonImage, new_width: u32, new_height: u32) -> Option<PhotonImage> {
+fn resize_image(image: &mut PhotonImage, new_width: u32, new_height: u32) -> PhotonImage {
     //println!("Resize...");
-    Some(resize(
+    resize(
         &image,
         new_width,
         new_height,
         photon_rs::transform::SamplingFilter::Nearest,
-    ))
+    )
 }
 
 fn image_scale_size(width: u32, height: u32, scale: f32) -> (u32, u32) {
@@ -127,7 +127,7 @@ fn main() {
 
         let new_image = match cli_options.resize {
             true => {
-                cli_options.scale.and_then(|s| {
+                cli_options.scale.map(|s| {
                     let (w, h) = image_scale_size(image.get_width(), image.get_height(), s);
                     //resize_image(&mut image, cli_options.new_width.unwrap(), cli_options.new_height.unwrap())
                     resize_image(&mut image, w, h)
