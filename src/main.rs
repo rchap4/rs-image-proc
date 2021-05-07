@@ -1,18 +1,17 @@
 extern crate photon_rs;
 use photon_rs::effects;
-use photon_rs::native::{ open_image, save_image };
-use photon_rs::PhotonImage;
+use photon_rs::native::{open_image, save_image};
 use photon_rs::transform::resize;
+use photon_rs::PhotonImage;
 use structopt::StructOpt;
 
 mod functions;
 //use functions::functions::dec_brightness;
-use functions::functions::dec_brightness_channel;
+use functions::dec_brightness_channel;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "Photon Image Tool", about = "Simple image processing")]
 struct CliOptions {
-    
     /// Resize image
     #[structopt(long = "resize")]
     resize: bool,
@@ -22,7 +21,7 @@ struct CliOptions {
     // maintains aspect ratio
     //516 x 783
     /// New Width
-    // #[structopt(short = "w", long = "width", 
+    // #[structopt(short = "w", long = "width",
     //             required_if("resize", "true"))]
     // new_width: Option<u32>,
 
@@ -32,14 +31,17 @@ struct CliOptions {
     // new_height: Option<u32>,
 
     /// Scale the image instead of resize
-    #[structopt(short= "s", long = "scale",
-                required_if("resize", "true"),
-                help = "Percent to scale image")]
+    #[structopt(
+        short = "s",
+        long = "scale",
+        required_if("resize", "true"),
+        help = "Percent to scale image"
+    )]
     scale: Option<f32>,
-    
+
     /// Image correction
     #[structopt(long = "correct")]
-    correct:bool,
+    correct: bool,
 
     /// Brightness value
     #[structopt(short = "b", long = "brighten")]
@@ -59,27 +61,26 @@ struct CliOptions {
 
     /// Output image
     #[structopt(parse(from_os_str))]
-    output_image: std::path::PathBuf
-
+    output_image: std::path::PathBuf,
 }
 
-fn brighten_contrast(image: &mut PhotonImage,
-                     brighten: Option<u8>,
-                     darken: Option<u8>,
-                     contrast: Option<f32>) {
+fn brighten_contrast(
+    image: &mut PhotonImage,
+    brighten: Option<u8>,
+    darken: Option<u8>,
+    contrast: Option<f32>,
+) {
+    if let Some(b) = brighten {
+        effects::inc_brightness(image, b)
+    }
 
-    brighten.and_then(|b| {
-        Some(effects::inc_brightness(image, b))
-    });
+    if let Some(d) = darken {
+        dec_brightness_channel(image, d)
+    }
 
-    darken.and_then(|d| {
-        Some(dec_brightness_channel(image,d))
-    });
-
-    contrast.and_then(|c| {
-        Some(effects::adjust_contrast(image, c))
-    });
-
+    if let Some(c) = contrast {
+        effects::adjust_contrast(image, c)
+    }
 }
 
 // unneeded alternative approch to decrease brightness
@@ -92,20 +93,18 @@ fn brighten_contrast(image: &mut PhotonImage,
 //     })
 // }
 
-fn resize_image(image: &mut PhotonImage,
-                new_width: u32,
-                new_height: u32) -> Option<PhotonImage> {
-        //println!("Resize...");
-        Some(resize(&image,
-                    new_width,
-                    new_height,
-                    photon_rs::transform::SamplingFilter::Nearest))
+fn resize_image(image: &mut PhotonImage, new_width: u32, new_height: u32) -> PhotonImage {
+    //println!("Resize...");
+    resize(
+        &image,
+        new_width,
+        new_height,
+        photon_rs::transform::SamplingFilter::Nearest,
+    )
 }
 
-fn image_scale_size(width:u32,
-                    height:u32,
-                    scale: f32) -> (u32,u32) {
-    let img_width = (width as f32 * scale) as u32 ;
+fn image_scale_size(width: u32, height: u32, scale: f32) -> (u32, u32) {
+    let img_width = (width as f32 * scale) as u32;
     let img_height = (height as f32 * scale) as u32;
     (img_width, img_height)
 }
@@ -117,12 +116,13 @@ fn main() {
         let mut image = open_image(img).expect("Could not open image");
 
         if cli_options.correct {
-            brighten_contrast(&mut image,
-                              cli_options.brightness,
-                              cli_options.darken,
-                              cli_options.contrast);   
+            brighten_contrast(
+                &mut image,
+                cli_options.brightness,
+                cli_options.darken,
+                cli_options.contrast,
+            );
         }
-
 
         // unneeded function for another approch goes with darken_image
         // function above
@@ -133,18 +133,15 @@ fn main() {
 
         let new_image = match cli_options.resize {
             true => {
-                cli_options.scale.and_then(|s| {
-                    let (w,h) =
-                        image_scale_size(image.get_width(),
-                                         image.get_height(),
-                                         s);
+                cli_options.scale.map(|s| {
+                    let (w, h) = image_scale_size(image.get_width(), image.get_height(), s);
                     //resize_image(&mut image, cli_options.new_width.unwrap(), cli_options.new_height.unwrap())
                     resize_image(&mut image, w, h)
                 })
-            },
-            false => None
+            }
+            false => None,
         };
-        
+
         // unneeded experiments with cli options/resize/behavior
         //and_then = flatmap
         // let new_image = cli_options.resize.and_then(|b| {
@@ -157,7 +154,7 @@ fn main() {
         //         }
         //     }
         // );
-        
+
         // let new_image = match cli_options.resize {
         //     Some(b) => if b == true {
         //         Some(resize_image(&mut image, cli_options.new_width.unwrap(), cli_options.new_height.unwrap()))
@@ -166,17 +163,24 @@ fn main() {
         //     }
         //     None => None
         // };
-        
+
         // Since structops shouldn't let you get this far without
         // an input and output path we'll expect/panic
         match new_image {
-            Some(img) => save_image(img, cli_options.output_image
-                                            .to_str()
-                                            .expect("Output path not provided")),
-            None => save_image(image, cli_options.output_image
-                                            .to_str()
-                                            .expect("Output path not provided"))
+            Some(img) => save_image(
+                img,
+                cli_options
+                    .output_image
+                    .to_str()
+                    .expect("Output path not provided"),
+            ),
+            None => save_image(
+                image,
+                cli_options
+                    .output_image
+                    .to_str()
+                    .expect("Output path not provided"),
+            ),
         }
-
     }
 }
