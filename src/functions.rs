@@ -32,12 +32,11 @@ pub mod functions {
                 image_pixels[i + 2] = 0
             }
         }
-        let image = PhotonImage::new(
+        PhotonImage::new(
             image_pixels,
             photon_image.get_width(),
             photon_image.get_height(),
-        );
-        image
+        )
     }
 
     // This approch keeps the calling
