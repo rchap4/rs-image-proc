@@ -7,7 +7,7 @@ use structopt::StructOpt;
 
 mod functions;
 //use functions::functions::dec_brightness;
-use functions::functions::dec_brightness_channel;
+use functions::dec_brightness_channel;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "Photon Image Tool", about = "Simple image processing")]
