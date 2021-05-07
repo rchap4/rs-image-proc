@@ -42,8 +42,9 @@ pub mod functions {
     // This approch keeps the calling
     // routine clean as a series of continuations.
     pub fn dec_brightness_channel(photon_image: &mut PhotonImage, brightness: u8) {
+        let amount = i16::from(brightness);
         for c in 0..=2 {
-            alter_channel(photon_image, c, brightness as i16 * -1);
+            alter_channel(photon_image, c, -amount);
         }
     }
 }
