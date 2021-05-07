@@ -70,11 +70,11 @@ fn brighten_contrast(
     darken: Option<u8>,
     contrast: Option<f32>,
 ) {
-    brighten.and_then(|b| Some(effects::inc_brightness(image, b)));
+    if let Some(b) = brighten { effects::inc_brightness(image, b) }
 
-    darken.and_then(|d| Some(dec_brightness_channel(image, d)));
+    if let Some(d) = darken { dec_brightness_channel(image, d) }
 
-    contrast.and_then(|c| Some(effects::adjust_contrast(image, c)));
+    if let Some(c) = contrast { effects::adjust_contrast(image, c) }
 }
 
 // unneeded alternative approch to decrease brightness
