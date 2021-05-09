@@ -1,7 +1,7 @@
 [package]
 name = "rs-image-proc"
 version = "0.1.0"
-authors = ["RChapman <rchap4@gmail.com>"]
+authors = ["RChapman"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
