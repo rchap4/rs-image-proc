@@ -15,7 +15,6 @@
  *   You should have received a copy of the Affero GNU General Public License
  *   along with rs-image-proc.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 extern crate photon_rs;
 use photon_rs::effects;
 use photon_rs::native::{open_image, save_image};

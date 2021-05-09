@@ -15,7 +15,6 @@
  *   You should have received a copy of the Affero GNU General Public License
  *   along with rs-image-proc.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 use photon_rs::channels::alter_channel;
 use photon_rs::PhotonImage;
 
