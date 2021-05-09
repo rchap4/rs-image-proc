@@ -1,3 +1,21 @@
+/**
+ * Copyright 2021 RChapman et. Al.  
+ * This file is part of rs-image-proc.
+ *
+ *   rs-image-proc is free software: you can redistribute it and/or modify
+ *   it under the terms of the Affero GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   rs-image-proc is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   Affero GNU General Public License for more details.
+ *
+ *   You should have received a copy of the Affero GNU General Public License
+ *   along with rs-image-proc.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 extern crate photon_rs;
 use photon_rs::effects;
 use photon_rs::native::{open_image, save_image};
@@ -10,7 +28,11 @@ mod functions;
 use functions::dec_brightness_channel;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "Photon Image Tool", about = "Simple image processing")]
+#[structopt(
+    name = "rs-image-proc",
+    about = "Simple image processing in Rust using Photon.\n
+See https://github.com/rchap4/rs-image-proc for source code."
+)]
 struct CliOptions {
     /// Resize image
     #[structopt(long = "resize")]
